@@ -282,7 +282,7 @@ function orderColor() { //sort the list in color order
 }
 
 function mousePressed() { //play the sound when each name is clicked on
-  if (mouseY > 475) {
+  if (mouseY > 475 && mouseX > 125 && mouseX < 450) {
     if (hoveredName) {
       if (sounds[hoveredName]) {
         sounds[hoveredName].play();
