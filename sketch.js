@@ -240,7 +240,7 @@ function draw() {
     text(getSortingData(pokemon[i]), dataX, nameY); // Display sorting data
     nameY += 27.5; // Increment the y-coordinate for the next Pokemon
   }
-  if (currentPokemonImage && mouseY > 475 && mouseX > 125 && mouseX < 450) {
+  if (currentPokemonImage && mouseY < 4625 && mouseY > 475 && mouseX > 125 && mouseX < 450) {
     image(currentPokemonImage, mouseX, mouseY, 100, 100); // Display the image if available
   }
 }
@@ -282,7 +282,7 @@ function orderColor() { //sort the list in color order
 }
 
 function mousePressed() { //play the sound when each name is clicked on
-  if (mouseY > 475 && mouseX > 125 && mouseX < 450) {
+  if (mouseY > 475 && mouseY < 4625 && mouseX > 125 && mouseX < 450) {
     if (hoveredName) {
       if (sounds[hoveredName]) {
         sounds[hoveredName].play();
