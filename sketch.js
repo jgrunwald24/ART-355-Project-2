@@ -218,7 +218,6 @@ function mouseMoved() {
 
   if (!hoveredName) { //if the mouse is not over any name, clear the current image
     currentPokemonImage = null;
-    cursor(ARROW); //change cursor back to the default arrow
   }
 }
 
@@ -242,6 +241,8 @@ function draw() {
   }
   if (currentPokemonImage && mouseY < 4625 && mouseY > 475 && mouseX > 125 && mouseX < 450) {
     image(currentPokemonImage, mouseX, mouseY, 100, 100); // Display the image if available
+  } else {
+    cursor(ARROW); //change cursor back to the default arrow
   }
 }
 
