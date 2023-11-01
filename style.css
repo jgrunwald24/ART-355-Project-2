@@ -7,7 +7,7 @@ html {
 }
 
 canvas {
-  /* margin:auto; */
+  margin:auto;
   display: block;
 }
 
@@ -15,11 +15,12 @@ h1, h2 {
   text-align: center;
   font-family: sans-serif;
   background-color: azure;
-  margin-left: 20%;
-  margin-right: 20%;
+  margin-left: auto;
+  margin-right: auto;
   border-color: darkblue;
   border-width: 3px;
   border-style: solid;
+  width: 600px;
 }
 
 

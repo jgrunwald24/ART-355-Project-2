@@ -1,8 +1,10 @@
 let data;
+let pokeData;
+let img;
 let pokemon;
 let font;
 let currentSortingOrder = "Number";
-let hoveredName = null;
+let clickName = null;
 let currentPokemonImage = null;
 const pokemonImages = [];
 const sounds = {};
@@ -162,7 +164,7 @@ const pokepics = { //list of pokemon images
 };
 
 function preload() {
-  data = loadJSON("pokemon.json"); //load the JSON data
+  data = loadJSON("pokemon.json", gotData); //load the JSON data
   img = loadImage('images/BG.png'); //load the background image
   font = loadFont("OldSchoolAdventures.ttf"); //load the font
   for (let name in pokepics) { //preload pokemon images
@@ -178,9 +180,16 @@ function preload() {
   }
 }
 
+function gotData(data) {
+  pokeData = data;
+}
+
 function setup() {
-  let buttonContainer = createDiv(); // Create a container for the buttons at the top
-  buttonContainer.position(100, 500);
+  createCanvas(600, 5000);
+  pokemon = data.pokemon;
+
+  buttonContainer = createDiv(); // Create a container for the buttons at the top
+  centerButtonContainer(); // Initial positioning
 
   Nbutton = createButton("Sort by Number"); //create each of the sorting buttons
   Nbutton.mousePressed(orderNum);
@@ -197,52 +206,65 @@ function setup() {
   Cbutton = createButton("Sort by Color");
   Cbutton.mousePressed(orderColor);
   Cbutton.parent(buttonContainer);
-
-  createCanvas(600, 5000);
-  pokemon = data.pokemon;
 }
 
-function mouseMoved() {
-  let nameY = 500;
-  for (let i = 0; i < pokemon.length; i++) { //for every pokemon, determine whether the mouse is over its name based on its coordinates
-    const isMouseOverName = mouseX > 125 && mouseX < 425 && mouseY > nameY - 18 && mouseY < nameY + 9; //boolean for determining if the mouse is over each name
-    if (isMouseOverName) { //if true, pull the name and display an image based on that name
-      hoveredName = pokemon[i].name;
-      if (pokepics[hoveredName]) {
-        currentPokemonImage = loadImage("images/" + pokepics[hoveredName]);
-      }
-      cursor(HAND); //change cursor to a hand when hovered
-    }
-   nameY += 27.5; //increment the y-coordinate for the next Pokemon
-  }
+function centerButtonContainer() {
+  const a = (windowWidth / 2 - 200);
+  const b = 500; // Adjust this value to change the vertical position
+  buttonContainer.position(a, b);
+}
 
-  if (!hoveredName) { //if the mouse is not over any name, clear the current image
-    currentPokemonImage = null;
+function windowResized() {
+  centerButtonContainer();
+}
+
+function mouseMoved() {//used for determining the mouse position that will be used for clicking and playing sounds
+  let cboxY = 500; //starting y coordinate for click box
+  for (let i = 0; i < pokemon.length; i++) { //for every pokemon, determine whether the mouse is over its name based on its coordinates
+    const isMouseOverName = mouseX > 125 && mouseX < 425 && mouseY > cboxY - 18 && mouseY < cboxY + 9; //boolean for determining if the mouse is over each name
+    if (isMouseOverName) { //if true, pull the name and set to clickname
+      clickName = pokemon[i].name;
+      
+    }
+    cboxY += 27.5; //increment the click box y-coordinate for the next Pokemon
   }
 }
 
 function draw() {
-  background(img); //set the background as the loaded image
+  background(img);
   textSize(24);
   textAlign(LEFT);
   textFont(font);
   fill(0);
   text("Sorting Order: " + currentSortingOrder, 125, 450);
 
-  let nameX = 125; //adjust x coordinate for name column
-  let dataX = 425; //adjust the x coordinate for the data column
-  let nameY = 500; //adjust the y coordinate for the name column
-  for (let i = 0; i < pokemon.length; i++) { //for each pokemon, print its name in the correlating color
-    fill(pokemon[i].color);
-    textSize(18);
-    text(pokemon[i].name, nameX, nameY);
-    text(getSortingData(pokemon[i]), dataX, nameY); // Display sorting data
-    nameY += 27.5; // Increment the y-coordinate for the next Pokemon
-  }
-  if (currentPokemonImage && mouseY < 4625 && mouseY > 475 && mouseX > 125 && mouseX < 450) {
-    image(currentPokemonImage, mouseX, mouseY, 100, 100); // Display the image if available
+  let nameX = 125;
+  let dataX = 425;
+  let nameY = 500;
+
+  if (mouseY > 475 && mouseY < 4625 && mouseX > 125 && mouseX < 425) { //determine if mouse is in clickable area and change shape accordingly
+    cursor(HAND);
   } else {
-    cursor(ARROW); //change cursor back to the default arrow
+    cursor(ARROW);
+  }
+  if (pokeData) {
+    for (let i = 0; i < pokemon.length; i++) {
+      fill(pokemon[i].color);
+      textSize(18);
+      text(pokemon[i].name, nameX, nameY);
+      text(getSortingData(pokemon[i]), dataX, nameY);
+    
+      // Check if the cursor is over a Pokemon's name and display the image
+      if (mouseX > 125 && mouseX < 425 && mouseY > nameY - 18 && mouseY < nameY + 9) {
+        const hoveredName = pokemon[i].name;
+        if (pokepics[hoveredName]) {
+          const x = mouseX;
+          const y = mouseY;
+          image(pokemonImages[hoveredName], x, y, 100, 100);
+        }
+      }
+      nameY += 27.5;
+    }
   }
 }
 
@@ -283,10 +305,10 @@ function orderColor() { //sort the list in color order
 }
 
 function mousePressed() { //play the sound when each name is clicked on
-  if (mouseY > 475 && mouseY < 4625 && mouseX > 125 && mouseX < 450) {
-    if (hoveredName) {
-      if (sounds[hoveredName]) {
-        sounds[hoveredName].play();
+  if (mouseY > 475 && mouseY < 4625 && mouseX > 125 && mouseX < 425) {
+    if (clickName) {
+      if (pokepics[clickName]) {
+        sounds[clickName].play();
       }
     }
   }
