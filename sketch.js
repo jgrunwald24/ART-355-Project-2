@@ -1,5 +1,4 @@
 let data;
-let buttonContainer;
 let pokeData;
 let img;
 let pokemon;
@@ -225,8 +224,8 @@ function mouseMoved() {//used for determining the mouse position that will be us
     const isMouseOverName = mouseX > 125 && mouseX < 425 && mouseY > cboxY - 18 && mouseY < cboxY + 9; //boolean for determining if the mouse is over each name
     if (isMouseOverName) { //if true, pull the name and set to clickname
       clickName = pokemon[i].name;
-      
     }
+
     cboxY += 27.5; //increment the click box y-coordinate for the next Pokemon
   }
 }
@@ -242,40 +241,44 @@ function draw() {
   let nameX = 125;
   let dataX = 425;
   let nameY = 500;
+  let nameYY = 500; //two y variables are used, one for the name list and one for the images
 
   if (mouseY > 475 && mouseY < 4625 && mouseX > 125 && mouseX < 425) { //determine if mouse is in clickable area and change shape accordingly
     cursor(HAND);
   } else {
     cursor(ARROW);
   }
-  if (pokeData) {
-    for (let i = 0; i < pokemon.length; i++) {
-      fill(pokemon[i].color);
-      textSize(18);
-      text(pokemon[i].name, nameX, nameY);
-      text(getSortingData(pokemon[i]), dataX, nameY);
-    
-      // Check if the cursor is over a Pokemon's name and display the image
-      if (mouseX > 125 && mouseX < 425 && mouseY > nameY - 18 && mouseY < nameY + 9) {
-        const hoveredName = pokemon[i].name;
-        if (pokepics[hoveredName]) {
-          const x = mouseX;
-          const y = mouseY;
-          image(pokemonImages[hoveredName], x, y, 100, 100);
-        }
+
+  for (let i = 0; i < pokemon.length; i++) {
+    fill(pokemon[i].color);
+    textSize(18);
+    text(pokemon[i].name, nameX, nameY);
+    text(getSortingData(pokemon[i]), dataX, nameY);
+    nameY += 27.5;
+  }
+
+  for (let i = 0; i < pokemon.length; i++) {  //check if the cursor is over a Pokemon's name and display the image
+    if (mouseX > 125 && mouseX < 425 && mouseY > nameYY - 18 && mouseY < nameYY + 9) {
+      const hoveredName = pokemon[i].name;
+      if (pokepics[hoveredName]) {
+        const x = mouseX;
+        const y = mouseY;
+        image(pokemonImages[hoveredName], x, y, 100, 100);
       }
-      nameY += 27.5;
     }
+
+    nameYY += 27.5;
   }
 }
+
 
 function getSortingData(pokemon) { //obtain info to display in data column
   if (currentSortingOrder === "Number") {
     return pokemon.id;
   } else if (currentSortingOrder === "Height") {
-    return pokemon.height/2 + " feet";
+    return pokemon.height / 2 + " ft";
   } else if (currentSortingOrder === "Weight") {
-    return pokemon.weight/2 + " lbs";
+    return pokemon.weight / 2 + " lbs";
   } else if (currentSortingOrder === "Color") {
     return pokemon.color;
   }
@@ -293,7 +296,7 @@ function orderWeight() { //sort the list in weight order
 
 function orderNum() { //sort the list in numerical order
   currentSortingOrder = "Number";
-  pokemon.sort((a,b) => a.id - b.id);
+  pokemon.sort((a, b) => a.id - b.id);
 }
 
 function orderColor() { //sort the list in color order
