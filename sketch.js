@@ -1,4 +1,5 @@
 let data;
+let buttonContainer;
 let pokeData;
 let img;
 let pokemon;
