@@ -1,5 +1,4 @@
 let data;
-let pokeData;
 let img;
 let pokemon;
 let font;
@@ -131,7 +130,7 @@ const pokepics = { //list of pokemon images
   "Seaking": "seaking.png",
   "Staryu": "staryu.png",
   "Starmie": "starmie.png",
-  "Mr-mime": "mr-mime.png",
+  "Mr-Mime": "mr-mime.png",
   "Scyther": "scyther.png",
   "Jynx": "jynx.png",
   "Electabuzz": "electabuzz.png",
@@ -180,9 +179,6 @@ function preload() {
   }
 }
 
-function gotData(data) {
-  pokeData = data;
-}
 
 function setup() {
   createCanvas(600, 5000);
@@ -220,13 +216,15 @@ function windowResized() {
 
 function mouseMoved() {//used for determining the mouse position that will be used for clicking and playing sounds
   let cboxY = 500; //starting y coordinate for click box
-  for (let i = 0; i < pokemon.length; i++) { //for every pokemon, determine whether the mouse is over its name based on its coordinates
-    const isMouseOverName = mouseX > 125 && mouseX < 425 && mouseY > cboxY - 18 && mouseY < cboxY + 9; //boolean for determining if the mouse is over each name
-    if (isMouseOverName) { //if true, pull the name and set to clickname
-      clickName = pokemon[i].name;
-    }
+  if (data) {
+    for (let i = 0; i < pokemon.length; i++) { //for every pokemon, determine whether the mouse is over its name based on its coordinates
+      const isMouseOverName = mouseX > 125 && mouseX < 425 && mouseY > cboxY - 18 && mouseY < cboxY + 9; //boolean for determining if the mouse is over each name
+      if (isMouseOverName) { //if true, pull the name and set to clickname
+        clickName = pokemon[i].name;
+      }
 
-    cboxY += 27.5; //increment the click box y-coordinate for the next Pokemon
+      cboxY += 27.5; //increment the click box y-coordinate for the next Pokemon
+    }
   }
 }
 
@@ -236,38 +234,40 @@ function draw() {
   textAlign(LEFT);
   textFont(font);
   fill(0);
-  text("Sorting Order: " + currentSortingOrder, 125, 450);
+  if (data) {
+    text("Sorting Order: " + currentSortingOrder, 125, 450);
 
-  let nameX = 125;
-  let dataX = 425;
-  let nameY = 500;
-  let nameYY = 500; //two y variables are used, one for the name list and one for the images
+    let nameX = 125;
+    let dataX = 425;
+    let nameY = 500;
+    let nameYY = 500; //two y variables are used, one for the name list and one for the images
 
-  if (mouseY > 475 && mouseY < 4625 && mouseX > 125 && mouseX < 425) { //determine if mouse is in clickable area and change shape accordingly
-    cursor(HAND);
-  } else {
-    cursor(ARROW);
-  }
-
-  for (let i = 0; i < pokemon.length; i++) {
-    fill(pokemon[i].color);
-    textSize(18);
-    text(pokemon[i].name, nameX, nameY);
-    text(getSortingData(pokemon[i]), dataX, nameY);
-    nameY += 27.5;
-  }
-
-  for (let i = 0; i < pokemon.length; i++) {  //check if the cursor is over a Pokemon's name and display the image
-    if (mouseX > 125 && mouseX < 425 && mouseY > nameYY - 18 && mouseY < nameYY + 9) {
-      const hoveredName = pokemon[i].name;
-      if (pokepics[hoveredName]) {
-        const x = mouseX;
-        const y = mouseY;
-        image(pokemonImages[hoveredName], x, y, 100, 100);
-      }
+    if (mouseY > 475 && mouseY < 4625 && mouseX > 125 && mouseX < 425) { //determine if mouse is in clickable area and change shape accordingly
+      cursor(HAND);
+    } else {
+      cursor(ARROW);
     }
 
-    nameYY += 27.5;
+    for (let i = 0; i < pokemon.length; i++) {
+      fill(pokemon[i].color);
+      textSize(18);
+      text(pokemon[i].name, nameX, nameY);
+      text(getSortingData(pokemon[i]), dataX, nameY);
+      nameY += 27.5;
+    }
+
+    for (let i = 0; i < pokemon.length; i++) {  //check if the cursor is over a Pokemon's name and display the image
+      if (mouseX > 125 && mouseX < 425 && mouseY > nameYY - 18 && mouseY < nameYY + 9) {
+        const hoveredName = pokemon[i].name;
+        if (pokepics[hoveredName]) {
+          const x = mouseX;
+          const y = mouseY;
+          image(pokemonImages[hoveredName], x, y, 100, 100);
+        }
+      }
+
+      nameYY += 27.5;
+    }
   }
 }
 
