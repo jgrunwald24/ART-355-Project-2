@@ -163,7 +163,7 @@ const pokepics = { //list of pokemon images
 };
 
 function preload() {
-  data = loadJSON("pokemon.json", gotData); //load the JSON data
+  data = loadJSON("pokemon.json"); //load the JSON data
   img = loadImage('images/BG.png'); //load the background image
   font = loadFont("OldSchoolAdventures.ttf"); //load the font
   for (let name in pokepics) { //preload pokemon images
